@@ -23,41 +23,24 @@ for row in rows:
 
 conn.close()
 
-# print(moldavian_texts)
-
-# Stratified split for country and category
 from sklearn.model_selection import train_test_split, StratifiedShuffleSplit
-
-# For each key in the dictionary, split the values into train and test
-# Train classificator on context independent features
-from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.pipeline import Pipeline
 from sklearn.naive_bayes import MultinomialNB
-from sklearn.linear_model import SGDClassifier
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import classification_report
 from stop_words import get_stop_words
-# ssss = []
+
 all_texts = {"romana": [], "moldova": []}
 
 for key in romanian_texts:
     all_texts["romana"].extend(romanian_texts[key])
-    # break
 
-# X_put_test = {"romana": all_texts["romana"][:50], "moldova": []}
-# all_texts["romana"] = all_texts["romana"][50:]
 
     
 for key in moldavian_texts:
     all_texts["moldova"].extend(moldavian_texts[key])
-    # break
-# X_put_test["moldova"].extend(all_texts["moldova"][:50])
-# all_texts["moldova"] = all_texts["moldova"][50:]
 
-# print(all_texts["moldova"])
-# print(len(all_texts["romana"]), len(all_texts["moldova"]))
-# exit(0)
 X = []
 y = []
 for key in all_texts:
@@ -70,7 +53,6 @@ y = np.array(y)
     
 sss = StratifiedShuffleSplit(n_splits=3, test_size=0.1, random_state=11)
 text_clf = Pipeline(steps=[
-        # ('vect', CountVectorizer()),
         ('tfidf', TfidfVectorizer(max_df=0.5, max_features=100000, min_df=2, stop_words=get_stop_words('ro'))),
         ('clf', MultinomialNB()),
     ], verbose=True)
@@ -99,10 +81,5 @@ print("Mean grid search score: ", np.mean(gs_scores))
 print("Best parameters: ", gs_clf.best_params_)
 print("Best score: ", gs_clf.best_score_)
 print(classification_report(y_test, gs_clf.predict(X_test)))
-    
-# y_test = np.array(['romana']*50 + ['moldova']*50)
-# X_test = np.array(X_put_test["romana"] + X_put_test["moldova"])
-# print(y_test.shape, X_test.shape)
-# print(classification_report(y_test, text_clf.predict(X_test)))
     
     
