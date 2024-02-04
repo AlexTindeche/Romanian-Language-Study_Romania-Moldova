@@ -14,7 +14,7 @@ for row in rows:
         romanian_texts[row[4]] = []
     romanian_texts[row[4]].append(row[5])
     
-c.execute('SELECT * FROM moldova WHERE newspaper != "zugo"')
+c.execute('SELECT * FROM moldova WHERE newspaper')
 rows = c.fetchall()
 for row in rows:
     if row[4] not in moldavian_texts:
@@ -60,14 +60,14 @@ y = np.array(y)
     
 sss = StratifiedShuffleSplit(n_splits=10, test_size=0.33, random_state=11)
 text_clf = Pipeline(steps=[
-        ('vect', CountVectorizer()),
-        ('tfidf', TfidfVectorizer(max_df=0.5, max_features=10000, min_df=2, stop_words=get_stop_words('ro'))),
+        # ('vect', CountVectorizer()),
+        ('tfidf', TfidfVectorizer(max_df=0.5, max_features=100000, min_df=2, stop_words=get_stop_words('ro'))),
         ('clf', MultinomialNB()),
     ], verbose=True)
 parameters = {
-    'vect__ngram_range': [2, 3],
+    'tfidf__ngram_range': [(1,1), (1,2)],
     'tfidf__use_idf': (True, False),
-    'clf__alpha': (1e-2, 1e-3),
+    'clf__alpha': (0.01, 0.001),
 }
 gs_clf = GridSearchCV(text_clf, parameters, cv=5, n_jobs=-1, verbose=1)
 
@@ -88,7 +88,6 @@ print("Mean score: ", np.mean(scores))
 print("Mean grid search score: ", np.mean(gs_scores))
 print("Best parameters: ", gs_clf.best_params_)
 print("Best score: ", gs_clf.best_score_)
-print(classification_report(y_test, gs_clf.predict(X_test)))
     
     
     
