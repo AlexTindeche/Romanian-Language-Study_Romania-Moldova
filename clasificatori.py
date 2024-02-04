@@ -57,7 +57,7 @@ text_clf = Pipeline(steps=[
         ('clf', MultinomialNB()),
     ], verbose=True)
 parameters = {
-    'tfidf__ngram_range': [(1,1), (1,2)],
+    'tfidf__ngram_range': [(1,1), (1,2), (1,3)],
     'tfidf__use_idf': (True, False),
     'clf__alpha': (0.01, 0.001),
 }
