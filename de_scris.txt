@@ -1,0 +1,27 @@
+Introducere:
+    - Problema: Comparatia dintre folosirea limbii romane in Romania si Republica Moldova pentru antrenarea modelelor de IA pentru clasificare
+    - Contributii:
+        - crearea unui corpus de texte pentru ziarele din ro si md
+        - analiza statistica a textelor din ro si md
+        - clasificator pe baza cuvintelor folosite
+        - clasificator pe baza POS din spacy si cube
+        - comparatia clasificatorilor cu cuvinte si POS
+        - comparatia clasificatorilor cu spacy si cube intre ei
+        - analiza pos cu dependency tree si statistici in ro si md
+        - generarea de text cu 4-grame in ro si md
+    - De ce-ul approachului:
+        - Intelegerea diferentelor lingivistice dintre lb ro din ro si din md
+    - Approach summary: vezi prezentarea
+    - Approach:
+        - Statistici pe fiecare limba: de zis cate ceva despre ele
+        - Clasificator pe cuvinte: de explicat modelul si rezultatele
+        - Clasificator cu spacy: la fel
+        - Clasificator cu cube: la fel
+        - Comparatie cuvinte vs POS
+        - Comparatie spacy vs cube
+        - Dependency tree: de spus cate ceva despre statistici
+        - Generarea de text automat: cum a fost generat (4-grame) si ce a rezultat + interpretarea noastra despre cat de prost e
+    - Conculzii:
+        - concluziile fiecarei comparatii de mai sus
+        - putem adauga topica frazei pe viitor
+        - putem mari baza de articole pe viitor
