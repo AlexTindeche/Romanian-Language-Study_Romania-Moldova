@@ -42,15 +42,15 @@ def get_word_statistics(folder, files):
     word_array = np.array(word_array)
     return [np.mean(word_array), np.median(word_array), np.std(word_array)]
 
-# mean_moldova, median_moldova, std_moldova = get_word_statistics("moldova", moldova)
-# mean_romania, median_romania, std_romania = get_word_statistics("romania", romania)
+mean_moldova, median_moldova, std_moldova = get_word_statistics("moldova", moldova)
+mean_romania, median_romania, std_romania = get_word_statistics("romania", romania)
 
-# print(f"Mean for Moldova: {mean_moldova}")
-# print(f"Median for Moldova: {median_moldova}")
-# print(f"Standard deviation for Moldova: {std_moldova}")
-# print(f"Mean for Romania: {mean_romania}")
-# print(f"Median for Romania: {median_romania}")
-# print(f"Standard deviation for Romania: {std_romania}")
+print(f"Mean for Moldova: {mean_moldova}")
+print(f"Median for Moldova: {median_moldova}")
+print(f"Standard deviation for Moldova: {std_moldova}")
+print(f"Mean for Romania: {mean_romania}")
+print(f"Median for Romania: {median_romania}")
+print(f"Standard deviation for Romania: {std_romania}")
 
 
 def get_categories_romania(files = romania):
@@ -72,10 +72,13 @@ def get_categories_moldova(files = moldova):
             with open(f"moldova/" + file, "rb") as f:
                 articles = f.read().decode("utf-8").split('----------------------------------')
                 for article in articles:
-                    if article != '':
-                        categ = article.split('\n')[3]
-                        if len(categ.split()) <= 10 and len(categ.strip()) > 0:
-                            categories.add(categ[:-1])
+                    try:
+                        if article != '':
+                            categ = article.split('\n')[3]
+                            if len(categ.split()) <= 10 and len(categ.strip()) > 0:
+                                categories.add(categ[:-1])
+                    except:
+                        continue
     return categories
 
 
@@ -205,80 +208,83 @@ def get_articles_by_category_moldova():
             with open(f"moldova/" + file, "rb") as f:
                 articles = f.read().decode("utf-8").split('----------------------------------')
                 for article in articles:
-                    if article != '':
-                        categ = article.split('\n')[3]
-                        categ = categ.strip()
-                        if len(categ.split()) <= 10 and len(categ.strip()) > 0:
-                            if categ in ['Politica', 'Politic', 'Alegerile locale-2023', 'Electorala', 'Aderare UE','Politic național','Alegeri parlamentare 2019', 'Politică',
-                                              'politic', 'Alegeri', 'Alegeri prezidențiale 2020', 'Electorala 2016', 'Alegeri locale 2023']:
-                                if 'Politica' in articles_by_category_moldova.keys():
-                                    articles_by_category_moldova['Politica'].append(article)
-                                else:
-                                    articles_by_category_moldova['Politica'] = [article]
-                            if categ in ['Sport', 'sport']:
-                                if 'Sport' in articles_by_category_moldova.keys():
-                                    articles_by_category_moldova['Sport'].append(article)
-                                else:
-                                    articles_by_category_moldova['Sport'] = [article]
-                            if categ in ['Economic', 'economic', 'Economie', 'economie']:
-                                if 'Economie' in articles_by_category_moldova.keys():
-                                    articles_by_category_moldova['Economie'].append(article)
-                                else:
-                                    articles_by_category_moldova['Economie'] = [article]
-                            if categ in ['Social', 'social', 'Societate', 'societate']:
-                                if 'Social' in articles_by_category_moldova.keys():
-                                    articles_by_category_moldova['Social'].append(article)
-                                else:
-                                    articles_by_category_moldova['Social'] = [article]
-                            if categ in ['Cultura', 'cultura', 'Cultură', 'cultură', 'Cultural']:
-                                if 'Cultura' in articles_by_category_moldova.keys():
-                                    articles_by_category_moldova['Cultura'].append(article)
-                                else:
-                                    articles_by_category_moldova['Cultura'] = [article]
-                            if categ in ['Stiri', 'stiri', 'Știri', 'știri', 'Știri din Moldova', 'știri din Moldova', 'Actualitate', 'Săptămânal Panoramic','Internațional', 'În Lume',
-                                              'Externe',  'Toate știrile', 'Internaţional', 'Războiul din Ucraina', 'Autorități publice locale']:
-                                if 'Stiri' in articles_by_category_moldova.keys():
-                                    articles_by_category_moldova['Stiri'].append(article)
-                                else:
-                                    articles_by_category_moldova['Stiri'] = [article]
-                            if categ in ['Local', 'local', 'Locale', 'locale', 'CĂLĂRAȘI', 'Regional',  'UNGHENI - Știri din orașul și raionul Ungheni', ]:
-                                if 'Locale' in articles_by_category_moldova.keys():
-                                    articles_by_category_moldova['Locale'].append(article)
-                                else:
-                                    articles_by_category_moldova['Locale'] = [article]
-                            if categ in ['Tehnologie', 'tehnologie', 'Tehnologie și știință', 'tehnologie și știință', 'IT şi Ştiinţă', 'Sci-tech', 'Statistică Pură', 'Cosmos']:
-                                if 'Tehnologie' in articles_by_category_moldova.keys():
-                                    articles_by_category_moldova['Tehnologie'].append(article)
-                                else:
-                                    articles_by_category_moldova['Tehnologie'] = [article]
-                            if categ in ['Lifestyle', 'Life']:
-                                if 'Lifestyle' in articles_by_category_moldova.keys():
-                                    articles_by_category_moldova['Lifestyle'].append(article)
-                                else:
-                                    articles_by_category_moldova['Lifestyle'] = [article]
-                            if categ in ['Justitie', 'justitie', 'Justiție', 'justiție']:
-                                if 'Justitie' in articles_by_category_moldova.keys():
-                                    articles_by_category_moldova['Justitie'].append(article)
-                                else:
-                                    articles_by_category_moldova['Justitie'] = [article]
-                            if categ in ['Entertainment', 'Divertisment', 'Eurovision', 'Eveniment', 'Bibliotecarul & Cartea', 'Lectură', 'Foto / Video',  '#560']:
-                                if 'Divertisment' in articles_by_category_moldova.keys():
-                                    articles_by_category_moldova['Divertisment'].append(article)
-                                else:
-                                    articles_by_category_moldova['Divertisment'] = [article]
-                            if categ in ['Educatie',  'Învățământ']:
-                                if 'Educatie' in articles_by_category_moldova.keys():
-                                    articles_by_category_moldova['Educatie'].append(article)
-                                else:
-                                    articles_by_category_moldova['Educatie'] = [article]
-                            if categ in ['Important', 'Publicitate', 'Drepturile omului' ,'Special', 'Advertoriale',  'Astăzi Vă Prezentăm', 'Uncategorized',  'Investigații', 
-                                              'Advertorial', 'Oameni care inspiră' , 'Slider',  'Ecologie', 'Cariera Mea', 'Judecați Singuri', 'Meteo', 'Urmează Apoi', 'Opinii', 'ExpresPlus',  
-                                              'Diverse', '15.01.2024 - 10:50 ', 'Stop propaganda!', 'Diaspora', 'Comunitate', 'Istorie', '06.12.2023 - 16:15 ', 'Serioasă Problemă', 'Interviu', 
-                                              'TOATE ARTICOLELE', 'PUB', '20.08.2021 - 11:28 ', 'Slider Principal',  'Reportaj',  'Transmisiuni și video',  'Horoscop']:
-                                if 'Diverse' in articles_by_category_moldova.keys():
-                                    articles_by_category_moldova['Diverse'].append(article)
-                                else:
-                                    articles_by_category_moldova['Diverse'] = [article]
+                    try:
+                        if article != '':
+                            categ = article.split('\n')[3]
+                            categ = categ.strip()
+                            if len(categ.split()) <= 10 and len(categ.strip()) > 0:
+                                if categ in ['Politica', 'Politic', 'Alegerile locale-2023', 'Electorala', 'Aderare UE','Politic național','Alegeri parlamentare 2019', 'Politică',
+                                                'politic', 'Alegeri', 'Alegeri prezidențiale 2020', 'Electorala 2016', 'Alegeri locale 2023']:
+                                    if 'Politica' in articles_by_category_moldova.keys():
+                                        articles_by_category_moldova['Politica'].append(article)
+                                    else:
+                                        articles_by_category_moldova['Politica'] = [article]
+                                if categ in ['Sport', 'sport']:
+                                    if 'Sport' in articles_by_category_moldova.keys():
+                                        articles_by_category_moldova['Sport'].append(article)
+                                    else:
+                                        articles_by_category_moldova['Sport'] = [article]
+                                if categ in ['Economic', 'economic', 'Economie', 'economie']:
+                                    if 'Economie' in articles_by_category_moldova.keys():
+                                        articles_by_category_moldova['Economie'].append(article)
+                                    else:
+                                        articles_by_category_moldova['Economie'] = [article]
+                                if categ in ['Social', 'social', 'Societate', 'societate']:
+                                    if 'Social' in articles_by_category_moldova.keys():
+                                        articles_by_category_moldova['Social'].append(article)
+                                    else:
+                                        articles_by_category_moldova['Social'] = [article]
+                                if categ in ['Cultura', 'cultura', 'Cultură', 'cultură', 'Cultural']:
+                                    if 'Cultura' in articles_by_category_moldova.keys():
+                                        articles_by_category_moldova['Cultura'].append(article)
+                                    else:
+                                        articles_by_category_moldova['Cultura'] = [article]
+                                if categ in ['Stiri', 'stiri', 'Știri', 'știri', 'Știri din Moldova', 'știri din Moldova', 'Actualitate', 'Săptămânal Panoramic','Internațional', 'În Lume',
+                                                'Externe',  'Toate știrile', 'Internaţional', 'Războiul din Ucraina', 'Autorități publice locale']:
+                                    if 'Stiri' in articles_by_category_moldova.keys():
+                                        articles_by_category_moldova['Stiri'].append(article)
+                                    else:
+                                        articles_by_category_moldova['Stiri'] = [article]
+                                if categ in ['Local', 'local', 'Locale', 'locale', 'CĂLĂRAȘI', 'Regional',  'UNGHENI - Știri din orașul și raionul Ungheni', ]:
+                                    if 'Locale' in articles_by_category_moldova.keys():
+                                        articles_by_category_moldova['Locale'].append(article)
+                                    else:
+                                        articles_by_category_moldova['Locale'] = [article]
+                                if categ in ['Tehnologie', 'tehnologie', 'Tehnologie și știință', 'tehnologie și știință', 'IT şi Ştiinţă', 'Sci-tech', 'Statistică Pură', 'Cosmos']:
+                                    if 'Tehnologie' in articles_by_category_moldova.keys():
+                                        articles_by_category_moldova['Tehnologie'].append(article)
+                                    else:
+                                        articles_by_category_moldova['Tehnologie'] = [article]
+                                if categ in ['Lifestyle', 'Life']:
+                                    if 'Lifestyle' in articles_by_category_moldova.keys():
+                                        articles_by_category_moldova['Lifestyle'].append(article)
+                                    else:
+                                        articles_by_category_moldova['Lifestyle'] = [article]
+                                if categ in ['Justitie', 'justitie', 'Justiție', 'justiție']:
+                                    if 'Justitie' in articles_by_category_moldova.keys():
+                                        articles_by_category_moldova['Justitie'].append(article)
+                                    else:
+                                        articles_by_category_moldova['Justitie'] = [article]
+                                if categ in ['Entertainment', 'Divertisment', 'Eurovision', 'Eveniment', 'Bibliotecarul & Cartea', 'Lectură', 'Foto / Video',  '#560']:
+                                    if 'Divertisment' in articles_by_category_moldova.keys():
+                                        articles_by_category_moldova['Divertisment'].append(article)
+                                    else:
+                                        articles_by_category_moldova['Divertisment'] = [article]
+                                if categ in ['Educatie',  'Învățământ']:
+                                    if 'Educatie' in articles_by_category_moldova.keys():
+                                        articles_by_category_moldova['Educatie'].append(article)
+                                    else:
+                                        articles_by_category_moldova['Educatie'] = [article]
+                                if categ in ['Important', 'Publicitate', 'Drepturile omului' ,'Special', 'Advertoriale',  'Astăzi Vă Prezentăm', 'Uncategorized',  'Investigații', 
+                                                'Advertorial', 'Oameni care inspiră' , 'Slider',  'Ecologie', 'Cariera Mea', 'Judecați Singuri', 'Meteo', 'Urmează Apoi', 'Opinii', 'ExpresPlus',  
+                                                'Diverse', '15.01.2024 - 10:50 ', 'Stop propaganda!', 'Diaspora', 'Comunitate', 'Istorie', '06.12.2023 - 16:15 ', 'Serioasă Problemă', 'Interviu', 
+                                                'TOATE ARTICOLELE', 'PUB', '20.08.2021 - 11:28 ', 'Slider Principal',  'Reportaj',  'Transmisiuni și video',  'Horoscop']:
+                                    if 'Diverse' in articles_by_category_moldova.keys():
+                                        articles_by_category_moldova['Diverse'].append(article)
+                                    else:
+                                        articles_by_category_moldova['Diverse'] = [article]
+                    except:
+                        continue
 
 
 get_articles_by_category_romania()
