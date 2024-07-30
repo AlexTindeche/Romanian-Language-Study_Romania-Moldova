@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from time import sleep
+from unidecode import unidecode
 
 
 site = 'https://www.libertatea.ro/stiri'
@@ -9,38 +10,38 @@ website_file = 'libertatea.txt'
 links_file = 'libertatea_links.txt'
 failed_links_file = 'liberatea_failed_links.txt'
 
-# first_page = requests.get(site)
-# soup = BeautifulSoup(first_page.content, 'html.parser')
+first_page = requests.get(site)
+soup = BeautifulSoup(first_page.content, 'html.parser')
 
-# titles = soup.find_all('h2', class_='article-title')
+titles = soup.find_all('h2', class_='article-title')
 
-# links = []
+links = []
 
-# for title in titles:
-#     link = title.find('a')
-#     links.append(link['href'])
-
-
-# for i in range(2, 50):
-#     sleep(2)
-#     print(f"Getting links from page {i}...")
-#     page = requests.get(site_2 + str(i))
-#     soup = BeautifulSoup(page.content, 'html.parser')
-#     titles = soup.find_all('h2', class_='article-title')
-#     for title in titles:
-#         link = title.find('a')
-#         links.append(link['href'])
+for title in titles:
+    link = title.find('a')
+    links.append(link['href'])
 
 
-# with open(links_file, 'w', encoding='utf-8') as file:
-#     for link in links:
-#         file.write(link + '\n')
+for i in range(2, 3):
+    sleep(2)
+    print(f"Getting links from page {i}...")
+    page = requests.get(site_2 + str(i))
+    soup = BeautifulSoup(page.content, 'html.parser')
+    titles = soup.find_all('h2', class_='article-title')
+    for title in titles:
+        link = title.find('a')
+        links.append(link['href'])
+
+
+with open(links_file, 'w', encoding='utf-8') as file:
+    for link in links:
+        file.write(link + '\n')
         
-# print(f"Got {len(links)} links.")
+print(f"Got {len(links)} links.")
 
-# with open(links_file, 'r', encoding='utf-8') as file:
-#     links = file.read().splitlines()
-# print(len(links))
+with open(links_file, 'r', encoding='utf-8') as file:
+    links = file.read().splitlines()
+print(len(links))
 # exit(0)
 
 articles = []
@@ -56,7 +57,7 @@ failed_links = []
 with open(website_file, 'w', encoding='utf-8') as file:
     file.write('libertatea.ro\n\n')
 
-for link in links:
+for link in links[:1]:
     link_no += 1
     if link_no - len(failed_links) > 500:
         break
@@ -81,9 +82,18 @@ for link in links:
         
         art_time = soup.find('time', id='itemprop-datePublished')['datetime']
         
-        art_text = soup.find('p', class_='intro').text
+        # art_text = soup.find('p', class_='intro').text
+
+        article = soup.find('div', class_='intro')
+        paragraphs = article.find_all('p')
+        art_text = ''
+        for p in paragraphs:
+                # Encode to utf-8
+                art_text += unidecode(p.text)
         
-        art_text += '\n\n' + soup.find('div', class_='article-body').find('div', id='content-wrapper').text
+        # art_text += '\n\n' + soup.find('div', class_='article-body').find('div', id='content-wrapper').text
+
+        print(art_text)
 
         articles.append(art_title + "\n" + art_categ + "\n" + art_time + "\n" + art_text + "\n----------------------------------\n\n")
     except(Exception) as e:
@@ -94,6 +104,6 @@ for link in links:
 print(f"Got {len(links) - len(failed_links)} articles.")
         
         
-with open(failed_links_file, 'w', encoding='utf-8') as file:
-    for link in failed_links:
-        file.write(link + '\n')
+# with open(failed_links_file, 'w', encoding='utf-8') as file:
+#     for link in failed_links:
+#         file.write(link + '\n')

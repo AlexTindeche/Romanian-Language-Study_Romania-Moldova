@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from time import sleep
+from unidecode import unidecode
 
 
 site = 'https://www.cancan.ro/stiri'
@@ -75,8 +76,14 @@ for link in links:
         
         
         art_time = soup.find('strong', class_="date_published").text
-        
-        art_text = soup.find('div', class_='single__content').text
+
+        article = soup.find('div', class_='single__content')
+        paragraphs = article.find_all('p')
+        art_text = ''
+        for p in paragraphs:
+                # Encode to utf-8
+                art_text += unidecode(p.text)
+
         
         # art_text += '\n\n' + soup.find('div', class_='article-body').find('div', id='content-wrapper').text
 

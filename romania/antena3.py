@@ -1,12 +1,13 @@
 import requests
 from bs4 import BeautifulSoup
 from time import sleep
+from unidecode import unidecode
 
 
 site = 'https://www.antena3.ro/stiri/'
 site_2 = 'https://www.antena3.ro/stiri/pagina-'
 website_file = 'antena3.txt'
-links_file = 'antena3_links.txt'
+links_file = 'Romanian-Language-Study_Romania-Moldova/romania/antena3_links.txt'
 failed_links_file = 'antena3_failed_links.txt'
 
 headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
@@ -79,9 +80,20 @@ for link in links:
         
         art_time = soup.find('div', class_="autor-ora-comentarii").find_all('span')[-1].text
         
-        art_text = soup.find('div', class_='text').text
+        # art_text = soup.find('div', class_='text').text
+
+        article = soup.find('div', class_='text')
+        paragraphs = article.find_all('p')
+        art_text = ''
+        for p in paragraphs:
+                # Encode to utf-8
+                art_text += unidecode(p.text)
+
+        print(art_text)
+        # print('----------------------------------\n\n')
+        # print(art_text)
         
-        # art_text += '\n\n' + soup.find('div', class_='article-body').find('div', id='content-wrapper').text
+        art_text += '\n\n' + soup.find('div', class_='article-body').find('div', id='content-wrapper').text
 
         articles.append(art_title + "\n" + art_categ + "\n" + art_time + "\n" + art_text + "\n----------------------------------\n\n")
     except(Exception) as e:

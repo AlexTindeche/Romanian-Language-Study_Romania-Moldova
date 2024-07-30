@@ -65,7 +65,8 @@ def jurnal_md():
             # with open('content.txt', 'w', encoding='utf-8') as f:
             #     f.write(soup.prettify())
             meta_data = soup.find_all('span', class_='article-meta-info')
-            date = meta_data[0].text
+            date = meta_data[0].text.split('/')[1].strip()
+            category = meta_data[0].find('a').text
             article = soup.find('div', class_='article-content mt-3')
             title = article.find('h3').text
             paragraphs = article.find_all('p')
@@ -76,11 +77,10 @@ def jurnal_md():
 
             # Remove all non-letters
             text = re.sub(r'\s+', ' ', text) 
-
-                # Write title in a big font
             jurnal_md_articles.write(title)
             jurnal_md_articles.write('\n')
-            jurnal_md_articles.write(meta_data[0].find('a').text + '\n')
+            jurnal_md_articles.write(category)
+            jurnal_md_articles.write('\n')
             jurnal_md_articles.write( ' ' + ' ' + date + '\n')
             jurnal_md_articles.write('\n')
             jurnal_md_articles.write(text + '\n')
@@ -547,19 +547,21 @@ def unica():
 # unica()
 # Create a thread for each function
 import threading
-threading.Thread(target=jurnal_md).start()
-threading.Thread(target=moldova1).start()
-threading.Thread(target=realitatea).start()
-# threading.Thread(target=cotidianul).start()
-threading.Thread(target=vocea_basarabiei).start()
-threading.Thread(target=zugo).start()
-threading.Thread(target=esp).start()
-threading.Thread(target=expresul).start()
-threading.Thread(target=nordnews).start()
-threading.Thread(target=unica).start()
+#threading.Thread(target=jurnal_md).start()
+# threading.Thread(target=moldova1).start()
+# threading.Thread(target=realitatea).start()
+# # threading.Thread(target=cotidianul).start()
+# threading.Thread(target=vocea_basarabiei).start()
+# threading.Thread(target=zugo).start()
+# threading.Thread(target=esp).start()
+# threading.Thread(target=expresul).start()
+# threading.Thread(target=nordnews).start()
+# threading.Thread(target=unica).start()
 
 # Wait for all threads to finish
-threading.Event().wait()
+#threading.Event().wait()
+
+jurnal_md()
 
 # Print in red ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 print('\033[91m' + '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
@@ -578,13 +580,13 @@ print('\033[91m' + '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
 # Get back to normal
 print('\033[0m')
 
-jurnal_md_articles.close()
-moldova1_articles.close()
-realitatea_articles.close()
-cotidianul_articles.close()
-vocea_basarabiei_articles.close()
-zugo_articles.close()
-esp_articles.close()
-expresul_articles.close()
-nordnews_articles.close()
-unica_articles.close()
+#jurnal_md_articles.close()
+# moldova1_articles.close()
+# realitatea_articles.close()
+# cotidianul_articles.close()
+# vocea_basarabiei_articles.close()
+# zugo_articles.close()
+# esp_articles.close()
+# expresul_articles.close()
+# nordnews_articles.close()
+# unica_articles.close()

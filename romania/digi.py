@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 from time import sleep
 import re
+from unidecode import unidecode
 
 
 site = 'https://www.digi24.ro/ultimele-stiri'
@@ -12,10 +13,10 @@ failed_links_file = 'digi_failed_links.txt'
 
 headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
 
-# first_page = requests.get(site, headers=headers)
-# soup = BeautifulSoup(first_page.content, 'html.parser')
+first_page = requests.get(site, headers=headers)
+soup = BeautifulSoup(first_page.content, 'html.parser')
 
-# titles = soup.find_all('h2', class_='article-title')
+titles = soup.find_all('h2', class_='article-title')
 
 # links = []
 
@@ -27,7 +28,7 @@ headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleW
 # # print(len(links))
 # # exit(0)
 
-# for i in range(2, 11):
+# for i in range(2, 2):
 #     print(f"So far got {len(links)} links")
 #     sleep(2)
 #     print(f"Getting links from page {i}...")
@@ -47,8 +48,8 @@ headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleW
 
 with open(links_file, 'r', encoding='utf-8') as file:
     links = file.read().splitlines()
-print(len(links))
-# exit(0)
+# print(len(links))
+# # exit(0)
 
 
 articles = []
@@ -84,7 +85,15 @@ for link in links:
         
         art_time = soup.find('time')['datetime']
         
-        art_text = soup.find('div', class_='data-app-meta-article').text
+        # art_text = soup.find('div', class_='data-app-meta-article').text
+
+        article = soup.find('div', class_='data-app-meta-article')
+        paragraphs = article.find_all('p')
+        art_text = ''
+        for p in paragraphs:
+                # Encode to utf-8
+                art_text += unidecode(p.text)
+
         
         # art_text += '\n\n' + soup.find('div', class_='article-body').find('div', id='content-wrapper').text
 

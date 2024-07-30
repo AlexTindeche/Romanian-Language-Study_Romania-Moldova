@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from time import sleep
+from unidecode import unidecode
 
 
 site = 'https://www.dcnews.ro/news.html'
@@ -22,7 +23,7 @@ failed_links_file = 'dcnews_failed_links.txt'
     
 
 
-# for i in range(2, 12):
+# for i in range(2, 3):
 #     print(f"So far got {len(links)} links")
 #     sleep(2)
 #     print(f"Getting links from page {i}...")
@@ -53,7 +54,7 @@ failed_links = []
 with open(website_file, 'w', encoding='utf-8') as file:
     file.write('dcnews.ro\n\n')
 
-for link in links:
+for link in links[1:2]:
     link_no += 1
     if link_no % 5 == 0:
         print(f"Getting article {link_no}/{len(links)} (errors so far {link_exception}: projected {len(links) - link_exception})...")
@@ -75,8 +76,20 @@ for link in links:
         
         
         art_time = soup.find('time')['datetime']
+
+        article = soup.find('div', class_='articol_dec')
+        paragraphs = article.find_all('p')
+        art_text = ''
+        for p in paragraphs:
+                # Encode to utf-8
+                art_text += unidecode(p.text)
         
-        art_text = soup.find('div', id='articleContent').text
+        # art_text = soup.find('div', id='articleContent').text
+        # print(art_title.strip())
+        # print('----------------')
+        # print(art_categ)
+        # print('----------------')
+        # print(art_text)
         
         # art_text += '\n\n' + soup.find('div', class_='article-body').find('div', id='content-wrapper').text
 
