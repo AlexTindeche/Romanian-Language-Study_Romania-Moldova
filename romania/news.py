@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 from time import sleep
 import re
+from unidecode import unidecode
 
 
 site = 'https://www.news.ro/toate'
@@ -12,8 +13,8 @@ failed_links_file = 'news_failed_links.txt'
 
 headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
 
-# first_page = requests.get(site, headers=headers)
-# soup = BeautifulSoup(first_page.content, 'html.parser')
+first_page = requests.get(site, headers=headers)
+soup = BeautifulSoup(first_page.content, 'html.parser')
 
 # titles = soup.find_all('article', class_='row article')
 
@@ -26,7 +27,7 @@ headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleW
 # # print(links)
 # # exit(0)
 
-# for i in range(2, 21):
+# for i in range(2, 3):
 #     print(f"So far got {len(links)} links")
 #     sleep(2)
 #     print(f"Getting links from page {i}...")
@@ -83,11 +84,20 @@ for link in links:
         
         art_time = soup.find('time')['datetime']
         
-        art_text = ''
-        paragraphs = soup.find('div', class_='article-content').find_all('p')
+        # art_text = ''
+        # paragraphs = soup.find('div', class_='article-content').find_all('p')
         
-        for paragraph in paragraphs:
-            art_text += paragraph.text + '\n'
+        # for paragraph in paragraphs:
+        #     art_text += paragraph.text + '\n'
+
+        article = soup.find('div', class_='article-content')
+        paragraphs = article.find_all('p')
+        art_text = ''
+        for p in paragraphs:
+                # Encode to utf-8
+                art_text += unidecode(p.text.strip()) + ' ' 
+
+        # print(art_text)
         
         # art_text += '\n\n' + soup.find('div', class_='article-body').find('div', id='content-wrapper').text
 

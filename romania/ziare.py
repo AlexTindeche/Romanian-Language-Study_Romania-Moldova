@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 from time import sleep
 import re
+from unidecode import unidecode
 
 
 site = 'https://ziare.com/toate/'
@@ -12,8 +13,8 @@ failed_links_file = 'ziare_failed_links.txt'
 
 headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
 
-# first_page = requests.get(site, headers=headers)
-# soup = BeautifulSoup(first_page.content, 'html.parser')
+first_page = requests.get(site, headers=headers)
+soup = BeautifulSoup(first_page.content, 'html.parser')
 
 # titles = soup.find_all('h3', class_='news__article__title')
 
@@ -27,7 +28,7 @@ headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleW
 # # print(len(links))
 # # exit(0)
 
-# for i in range(2, 21):
+# for i in range(2, 3):
 #     print(f"So far got {len(links)} links")
 #     sleep(2)
 #     print(f"Getting links from page {i}...")
@@ -42,7 +43,7 @@ headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleW
 #     for link in links:
 #         file.write(link + '\n')
         
-# print(f"Got {len(links)} links.")
+# # print(f"Got {len(links)} links.")
 
 
 with open(links_file, 'r', encoding='utf-8') as file:
@@ -84,7 +85,15 @@ for link in links:
         
         art_time = soup.find('div', class_='news__publish').text
         
-        art_text = soup.find('div', class_='news__content').text
+        # art_text = soup.find('div', class_='news__content').text
+        article = soup.find('div', class_='news__content')
+        paragraphs = article.find_all('p')
+        art_text = ''
+        for p in paragraphs:
+                # Encode to utf-8
+                art_text += unidecode(p.text.strip()) + ' ' 
+
+        # print(art_text) 
         
         # art_text += '\n\n' + soup.find('div', class_='article-body').find('div', id='content-wrapper').text
 
