@@ -536,6 +536,210 @@ def unica():
             unica_articles.write(text + '\n')
             unica_articles.write('----------------------------------\n\n')
 
+# ## # New websites added after the first presentation
+
+def noimd():
+    unica_articles.write('Noi.md\n\n')
+
+    base_url = 'https://noi.md/md/'
+    site = 'https://noi.md/md/news/topread/?p=4&page='
+
+    for i in range(1, 100):
+        print(base_url + ' :  ' + str(i))
+        response = requests.get(site + str(i) + '/')
+        all_news = BeautifulSoup(response.text, 'html.parser')
+        articles = all_news.find_all('article', class_='col-6 pl-1 pr-1 wrp')
+        all_news = []
+        for article in articles:
+            all_news.append(article.find('a', href=re.compile("^https://noi.md/md/")))
+
+        # Filter elements with exactly one class
+        all_news_filtered = [el[ 'href' ] for el in all_news if el != None and el[ 'href' ] != '/ro' and el[ 'href' ] != '/']
+
+        all_news_filtered = list(set(all_news_filtered))
+
+
+        for link in all_news_filtered:
+            response = requests.get(link)
+            soup = BeautifulSoup(response.text, 'html.parser')
+            # print(soup.prettify())
+            # Paste content to a text file in utf-8 format
+            # with open('content.txt', 'w', encoding='utf-8') as f:
+            #     f.write(soup.prettify())
+
+            article = soup.find('div', class_='row news-text')
+            title = article.find('div', class_='col-12').find('h1').text
+            time = soup.find('div', class_='date-news-bar').text.strip()
+            category = soup.find('div', class_='date-news-bar').find('a').text
+            paragraphs = article.find_all('p')
+            text = ''
+            for p in paragraphs:
+                # Encode to utf-8
+                text += unidecode(p.text)
+
+            # Remove all non-letters
+            text = re.sub(r'\s+', ' ', text) 
+
+            # Write title in a big font
+            unica_articles.write(title)
+            unica_articles.write('\n')
+            unica_articles.write(category + '\n' + time + ' ')
+            unica_articles.write('\n')
+            unica_articles.write(text + '\n')
+            unica_articles.write('----------------------------------\n\n')
+
+def tv8():
+    unica_articles.write('Unica.md\n\n')
+
+    base_url = 'https://unica.md/'
+    site = 'https://unica.md/sport/page/'
+
+    for i in range(1, 100):
+        print(base_url + ' :  ' + str(i))
+        response = requests.get(site + str(i) + '/')
+        all_news = BeautifulSoup(response.text, 'html.parser')
+        articles = all_news.find_all('article', class_='article article-vm-teaser')
+        all_news = []
+        for article in articles:
+            all_news.append(article.find('a', href=re.compile("^https://unica.md/")))
+
+        # Filter elements with exactly one class
+        all_news_filtered = [el[ 'href' ] for el in all_news if el != None and el[ 'href' ] != '/ro' and el[ 'href' ] != '/']
+
+        all_news_filtered = list(set(all_news_filtered))
+
+
+        for link in all_news_filtered:
+            response = requests.get(link)
+            soup = BeautifulSoup(response.text, 'html.parser')
+            # print(soup.prettify())
+            # Paste content to a text file in utf-8 format
+            # with open('content.txt', 'w', encoding='utf-8') as f:
+            #     f.write(soup.prettify())
+
+            article = soup.find('article')
+            title = article.find('h1').text
+            time = soup.find('div', class_='article-date').text.strip()
+            category = 'sport'
+            paragraphs = article.find_all('p')
+            text = ''
+            for p in paragraphs:
+                # Encode to utf-8
+                text += unidecode(p.text)
+
+            # Remove all non-letters
+            text = re.sub(r'\s+', ' ', text) 
+
+            # Write title in a big font
+            unica_articles.write(title)
+            unica_articles.write('\n')
+            unica_articles.write(category + '\n' + time + ' ')
+            unica_articles.write('\n')
+            unica_articles.write(text + '\n')
+            unica_articles.write('----------------------------------\n\n')
+
+
+def unimedia():
+    unica_articles.write('Unica.md\n\n')
+
+    base_url = 'https://unica.md/'
+    site = 'https://unica.md/sport/page/'
+
+    for i in range(1, 100):
+        print(base_url + ' :  ' + str(i))
+        response = requests.get(site + str(i) + '/')
+        all_news = BeautifulSoup(response.text, 'html.parser')
+        articles = all_news.find_all('article', class_='article article-vm-teaser')
+        all_news = []
+        for article in articles:
+            all_news.append(article.find('a', href=re.compile("^https://unica.md/")))
+
+        # Filter elements with exactly one class
+        all_news_filtered = [el[ 'href' ] for el in all_news if el != None and el[ 'href' ] != '/ro' and el[ 'href' ] != '/']
+
+        all_news_filtered = list(set(all_news_filtered))
+
+
+        for link in all_news_filtered:
+            response = requests.get(link)
+            soup = BeautifulSoup(response.text, 'html.parser')
+            # print(soup.prettify())
+            # Paste content to a text file in utf-8 format
+            # with open('content.txt', 'w', encoding='utf-8') as f:
+            #     f.write(soup.prettify())
+
+            article = soup.find('article')
+            title = article.find('h1').text
+            time = soup.find('div', class_='article-date').text.strip()
+            category = 'sport'
+            paragraphs = article.find_all('p')
+            text = ''
+            for p in paragraphs:
+                # Encode to utf-8
+                text += unidecode(p.text)
+
+            # Remove all non-letters
+            text = re.sub(r'\s+', ' ', text) 
+
+            # Write title in a big font
+            unica_articles.write(title)
+            unica_articles.write('\n')
+            unica_articles.write(category + '\n' + time + ' ')
+            unica_articles.write('\n')
+            unica_articles.write(text + '\n')
+            unica_articles.write('----------------------------------\n\n')
+
+
+def zdg():
+    unica_articles.write('Unica.md\n\n')
+
+    base_url = 'https://unica.md/'
+    site = 'https://unica.md/sport/page/'
+
+    for i in range(1, 100):
+        print(base_url + ' :  ' + str(i))
+        response = requests.get(site + str(i) + '/')
+        all_news = BeautifulSoup(response.text, 'html.parser')
+        articles = all_news.find_all('article', class_='article article-vm-teaser')
+        all_news = []
+        for article in articles:
+            all_news.append(article.find('a', href=re.compile("^https://unica.md/")))
+
+        # Filter elements with exactly one class
+        all_news_filtered = [el[ 'href' ] for el in all_news if el != None and el[ 'href' ] != '/ro' and el[ 'href' ] != '/']
+
+        all_news_filtered = list(set(all_news_filtered))
+
+
+        for link in all_news_filtered:
+            response = requests.get(link)
+            soup = BeautifulSoup(response.text, 'html.parser')
+            # print(soup.prettify())
+            # Paste content to a text file in utf-8 format
+            # with open('content.txt', 'w', encoding='utf-8') as f:
+            #     f.write(soup.prettify())
+
+            article = soup.find('article')
+            title = article.find('h1').text
+            time = soup.find('div', class_='article-date').text.strip()
+            category = 'sport'
+            paragraphs = article.find_all('p')
+            text = ''
+            for p in paragraphs:
+                # Encode to utf-8
+                text += unidecode(p.text)
+
+            # Remove all non-letters
+            text = re.sub(r'\s+', ' ', text) 
+
+            # Write title in a big font
+            unica_articles.write(title)
+            unica_articles.write('\n')
+            unica_articles.write(category + '\n' + time + ' ')
+            unica_articles.write('\n')
+            unica_articles.write(text + '\n')
+            unica_articles.write('----------------------------------\n\n')
+
 
 
 
