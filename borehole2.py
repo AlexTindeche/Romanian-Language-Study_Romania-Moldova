@@ -16,31 +16,31 @@ import tqdm
 from unidecode import unidecode
 import re
 
-jurnal_md_articles = open('Romanian-Language-Study_Romania-Moldova/moldova/jurnal_md_articles.txt', 'w', encoding='utf-8')
-moldova1_articles = open('Romanian-Language-Study_Romania-Moldova/moldova/moldova1_articles.txt', 'w', encoding='utf-8')
-realitatea_articles = open('Romanian-Language-Study_Romania-Moldova/moldova/realitatea_articles.txt', 'w', encoding='utf-8')
-cotidianul_articles = open('Romanian-Language-Study_Romania-Moldova/moldova/cotidianul_articles.txt', 'w', encoding='utf-8')
-vocea_basarabiei_articles = open('Romanian-Language-Study_Romania-Moldova/moldova/vocea_basarabiei_articles.txt', 'w', encoding='utf-8')
-zugo_articles = open('Romanian-Language-Study_Romania-Moldova/moldova/zugo_articles.txt', 'w', encoding='utf-8')
-esp_articles = open('Romanian-Language-Study_Romania-Moldova/moldova/esp_articles.txt', 'w', encoding='utf-8')
-expresul_articles = open('Romanian-Language-Study_Romania-Moldova/moldova/expresul_articles.txt', 'w', encoding='utf-8')
-nordnews_articles = open('Romanian-Language-Study_Romania-Moldova/moldova/nordnews_articles.txt', 'w', encoding='utf-8')
-unica_articles = open('Romanian-Language-Study_Romania-Moldova/moldova/unica_articles.txt', 'w', encoding='utf-8')
-noimd_articles = open('Romanian-Language-Study_Romania-Moldova/moldova/noimd_articles.txt', 'w', encoding='utf-8')
-tv8_articles = open('Romanian-Language-Study_Romania-Moldova/moldova/tv8_articles.txt', 'w', encoding='utf-8')
-unimedia_articles = open('Romanian-Language-Study_Romania-Moldova/moldova/unimedia_articles.txt', 'w', encoding='utf-8')
-zdg_articles = open('Romanian-Language-Study_Romania-Moldova/moldova/zdg_articles.txt', 'w', encoding='utf-8')
+jurnal_md_articles = open('moldova/jurnal_md_articles.txt', 'w', encoding='utf-8')
+moldova1_articles = open('moldova/moldova1_articles.txt', 'w', encoding='utf-8')
+realitatea_articles = open('moldova/realitatea_articles.txt', 'w', encoding='utf-8')
+cotidianul_articles = open('moldova/cotidianul_articles.txt', 'w', encoding='utf-8')
+vocea_basarabiei_articles = open('moldova/vocea_basarabiei_articles.txt', 'w', encoding='utf-8')
+zugo_articles = open('moldova/zugo_articles.txt', 'w', encoding='utf-8')
+esp_articles = open('moldova/esp_articles.txt', 'w', encoding='utf-8')
+expresul_articles = open('moldova/expresul_articles.txt', 'w', encoding='utf-8')
+nordnews_articles = open('moldova/nordnews_articles.txt', 'w', encoding='utf-8')
+unica_articles = open('moldova/unica_articles.txt', 'w', encoding='utf-8')
+noimd_articles = open('moldova/noimd_articles.txt', 'w', encoding='utf-8')
+gazetadechisinau_articles = open('moldova/gazetadechisinau.txt', 'w', encoding='utf-8')
+mineducatiei_articles = open('moldova/mineducatiei_articles.txt', 'w', encoding='utf-8')
+zdg_articles = open('moldova/zdg_articles.txt', 'w', encoding='utf-8')
 
-jurnal_md_articles.write('')
-moldova1_articles.write('')
-realitatea_articles.write('')
-cotidianul_articles.write('')
-vocea_basarabiei_articles.write('')
-zugo_articles.write('')
-esp_articles.write('')
-expresul_articles.write('')
-nordnews_articles.write('')
-unica_articles.write('')
+# jurnal_md_articles.write('')
+# moldova1_articles.write('')
+# realitatea_articles.write('')
+# cotidianul_articles.write('')
+# vocea_basarabiei_articles.write('')
+# zugo_articles.write('')
+# esp_articles.write('')
+# expresul_articles.write('')
+# nordnews_articles.write('')
+# unica_articles.write('')
 
 def jurnal_md():
 
@@ -539,19 +539,19 @@ def unica():
 # ## # New websites added after the first presentation
 
 def noimd():
-    unica_articles.write('Noi.md\n\n')
+    noimd_articles.write('Noi.md\n\n')
 
-    base_url = 'https://noi.md/md/'
+    base_url = 'https://noi.md'
     site = 'https://noi.md/md/news/topread/?p=4&page='
 
     for i in range(1, 100):
-        print(base_url + ' :  ' + str(i))
         response = requests.get(site + str(i) + '/')
         all_news = BeautifulSoup(response.text, 'html.parser')
-        articles = all_news.find_all('article', class_='col-6 pl-1 pr-1 wrp')
+        articles = all_news.find_all('div', class_='col-6 pl-1 pr-1 wrp')
+        # print(articles)
         all_news = []
         for article in articles:
-            all_news.append(article.find('a', href=re.compile("^https://noi.md/md/")))
+            all_news.append(article.find('a', href=re.compile("^/md/")))
 
         # Filter elements with exactly one class
         all_news_filtered = [el[ 'href' ] for el in all_news if el != None and el[ 'href' ] != '/ro' and el[ 'href' ] != '/']
@@ -560,7 +560,7 @@ def noimd():
 
 
         for link in all_news_filtered:
-            response = requests.get(link)
+            response = requests.get(base_url + link)
             soup = BeautifulSoup(response.text, 'html.parser')
             # print(soup.prettify())
             # Paste content to a text file in utf-8 format
@@ -568,7 +568,7 @@ def noimd():
             #     f.write(soup.prettify())
 
             article = soup.find('div', class_='row news-text')
-            title = article.find('div', class_='col-12').find('h1').text
+            title = soup.find('div', class_='col-12 col-lg-8 col-xl-6 news-block').find('div', class_='col-12').find('h1').text
             time = soup.find('div', class_='date-news-bar').text.strip()
             category = soup.find('div', class_='date-news-bar').find('a').text
             paragraphs = article.find_all('p')
@@ -581,27 +581,88 @@ def noimd():
             text = re.sub(r'\s+', ' ', text) 
 
             # Write title in a big font
-            unica_articles.write(title)
-            unica_articles.write('\n')
-            unica_articles.write(category + '\n' + time + ' ')
-            unica_articles.write('\n')
-            unica_articles.write(text + '\n')
-            unica_articles.write('----------------------------------\n\n')
+            noimd_articles.write(title)
+            noimd_articles.write('\n')
+            noimd_articles.write(category + '\n' + time + ' ')
+            noimd_articles.write('\n')
+            noimd_articles.write(text + '\n')
+            noimd_articles.write('----------------------------------\n\n')
 
-def tv8():
-    unica_articles.write('Unica.md\n\n')
+def gazetadechisinau():
+    gazetadechisinau_articles.write('gazetadechisinau.md\n\n')
 
-    base_url = 'https://unica.md/'
-    site = 'https://unica.md/sport/page/'
+    base_url = 'https://gazetadechisinau.md/'
+    site1 = 'https://gazetadechisinau.md/category/stiri/page/'
+    site2 = 'https://gazetadechisinau.md/category/politica/page/'
+    site3 = 'https://gazetadechisinau.md/category/economie/page/'
+    site4 = 'https://gazetadechisinau.md/category/sport/page/'
+    site5 = 'https://gazetadechisinau.md/category/cultura/page/'
+    site6 = 'https://gazetadechisinau.md/category/societate/page/'
+
+    sites = [site1, site2, site3, site4, site5, site6]
+
+    for site in sites:
+        print(site)
+        for i in range(1, 100):
+            print(base_url + ' :  ' + str(i))
+            response = requests.get(site + str(i) + '/')
+            all_news = BeautifulSoup(response.text, 'html.parser')
+            articles = all_news.find_all('h3', class_='entry-title td-module-title')
+            all_news = []
+            for article in articles:
+                all_news.append(article.find('a', href=re.compile("^https://gazetadechisinau.md/")))
+
+            # Filter elements with exactly one class
+            all_news_filtered = [el[ 'href' ] for el in all_news if el != None and el[ 'href' ] != '/ro' and el[ 'href' ] != '/']
+
+            all_news_filtered = list(set(all_news_filtered))
+
+
+            for link in all_news_filtered:
+                response = requests.get(link)
+                soup = BeautifulSoup(response.text, 'html.parser')
+                # print(soup.prettify())
+                # Paste content to a text file in utf-8 format
+                # with open('content.txt', 'w', encoding='utf-8') as f:
+                #     f.write(soup.prettify())
+
+                article = soup.find('div', class_='td-post-content td-pb-padding-side')
+                title = soup.find('div', class_='td-post-header td-pb-padding-side').find('h1').text
+                time = soup.find('time', class_='entry-date updated td-module-date').text.strip()
+                category = soup.find('ul', class_='td-category').find('a').text
+                paragraphs = article.find_all('p')
+                text = ''
+                for p in paragraphs:
+                    # Encode to utf-8
+                    text += unidecode(p.text)
+
+                # Remove all non-letters
+                text = re.sub(r'\s+', ' ', text) 
+
+                # Write title in a big font
+                gazetadechisinau_articles.write(title)
+                gazetadechisinau_articles.write('\n')
+                gazetadechisinau_articles.write(category + '\n' + time + ' ')
+                gazetadechisinau_articles.write('\n')
+                gazetadechisinau_articles.write(text + '\n')
+                gazetadechisinau_articles.write('----------------------------------\n\n')
+
+
+def mineducatiei():
+    mineducatiei_articles.write('www.mec.gov.md/ro\n\n')
+
+    base_url = 'https://www.mec.gov.md/'
+    site = 'https://www.mec.gov.md/ro/press-releases?page='
 
     for i in range(1, 100):
         print(base_url + ' :  ' + str(i))
-        response = requests.get(site + str(i) + '/')
+        headers={"User-Agent":"Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/60.0","Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"}
+        response = requests.get(site + str(i) + '/', headers=headers)
         all_news = BeautifulSoup(response.text, 'html.parser')
-        articles = all_news.find_all('article', class_='article article-vm-teaser')
+        articles = all_news.find_all('h4', class_='views-field views-field-title')
         all_news = []
         for article in articles:
-            all_news.append(article.find('a', href=re.compile("^https://unica.md/")))
+            all_news.append(article.find('a', href=re.compile("^/ro/content/")))
 
         # Filter elements with exactly one class
         all_news_filtered = [el[ 'href' ] for el in all_news if el != None and el[ 'href' ] != '/ro' and el[ 'href' ] != '/']
@@ -610,18 +671,18 @@ def tv8():
 
 
         for link in all_news_filtered:
-            response = requests.get(link)
+            response = requests.get(base_url + link, headers=headers)
             soup = BeautifulSoup(response.text, 'html.parser')
             # print(soup.prettify())
             # Paste content to a text file in utf-8 format
             # with open('content.txt', 'w', encoding='utf-8') as f:
             #     f.write(soup.prettify())
 
-            article = soup.find('article')
-            title = article.find('h1').text
-            time = soup.find('div', class_='article-date').text.strip()
-            category = 'sport'
-            paragraphs = article.find_all('p')
+            article = soup.find('div', class_='panel-panel panel-col')
+            title = article.find('div', class_='panel-pane pane-token pane-node-title pane-title').find('div', class_='pane-content').text.strip()
+            time = soup.find('div', class_='panel-pane pane-node-created').find('div', class_='pane-content').text.strip()
+            category = 'educatie'
+            paragraphs = article.find_all('span')
             text = ''
             for p in paragraphs:
                 # Encode to utf-8
@@ -631,116 +692,12 @@ def tv8():
             text = re.sub(r'\s+', ' ', text) 
 
             # Write title in a big font
-            unica_articles.write(title)
-            unica_articles.write('\n')
-            unica_articles.write(category + '\n' + time + ' ')
-            unica_articles.write('\n')
-            unica_articles.write(text + '\n')
-            unica_articles.write('----------------------------------\n\n')
-
-
-def unimedia():
-    unica_articles.write('Unica.md\n\n')
-
-    base_url = 'https://unica.md/'
-    site = 'https://unica.md/sport/page/'
-
-    for i in range(1, 100):
-        print(base_url + ' :  ' + str(i))
-        response = requests.get(site + str(i) + '/')
-        all_news = BeautifulSoup(response.text, 'html.parser')
-        articles = all_news.find_all('article', class_='article article-vm-teaser')
-        all_news = []
-        for article in articles:
-            all_news.append(article.find('a', href=re.compile("^https://unica.md/")))
-
-        # Filter elements with exactly one class
-        all_news_filtered = [el[ 'href' ] for el in all_news if el != None and el[ 'href' ] != '/ro' and el[ 'href' ] != '/']
-
-        all_news_filtered = list(set(all_news_filtered))
-
-
-        for link in all_news_filtered:
-            response = requests.get(link)
-            soup = BeautifulSoup(response.text, 'html.parser')
-            # print(soup.prettify())
-            # Paste content to a text file in utf-8 format
-            # with open('content.txt', 'w', encoding='utf-8') as f:
-            #     f.write(soup.prettify())
-
-            article = soup.find('article')
-            title = article.find('h1').text
-            time = soup.find('div', class_='article-date').text.strip()
-            category = 'sport'
-            paragraphs = article.find_all('p')
-            text = ''
-            for p in paragraphs:
-                # Encode to utf-8
-                text += unidecode(p.text)
-
-            # Remove all non-letters
-            text = re.sub(r'\s+', ' ', text) 
-
-            # Write title in a big font
-            unica_articles.write(title)
-            unica_articles.write('\n')
-            unica_articles.write(category + '\n' + time + ' ')
-            unica_articles.write('\n')
-            unica_articles.write(text + '\n')
-            unica_articles.write('----------------------------------\n\n')
-
-
-def zdg():
-    unica_articles.write('Unica.md\n\n')
-
-    base_url = 'https://unica.md/'
-    site = 'https://unica.md/sport/page/'
-
-    for i in range(1, 100):
-        print(base_url + ' :  ' + str(i))
-        response = requests.get(site + str(i) + '/')
-        all_news = BeautifulSoup(response.text, 'html.parser')
-        articles = all_news.find_all('article', class_='article article-vm-teaser')
-        all_news = []
-        for article in articles:
-            all_news.append(article.find('a', href=re.compile("^https://unica.md/")))
-
-        # Filter elements with exactly one class
-        all_news_filtered = [el[ 'href' ] for el in all_news if el != None and el[ 'href' ] != '/ro' and el[ 'href' ] != '/']
-
-        all_news_filtered = list(set(all_news_filtered))
-
-
-        for link in all_news_filtered:
-            response = requests.get(link)
-            soup = BeautifulSoup(response.text, 'html.parser')
-            # print(soup.prettify())
-            # Paste content to a text file in utf-8 format
-            # with open('content.txt', 'w', encoding='utf-8') as f:
-            #     f.write(soup.prettify())
-
-            article = soup.find('article')
-            title = article.find('h1').text
-            time = soup.find('div', class_='article-date').text.strip()
-            category = 'sport'
-            paragraphs = article.find_all('p')
-            text = ''
-            for p in paragraphs:
-                # Encode to utf-8
-                text += unidecode(p.text)
-
-            # Remove all non-letters
-            text = re.sub(r'\s+', ' ', text) 
-
-            # Write title in a big font
-            unica_articles.write(title)
-            unica_articles.write('\n')
-            unica_articles.write(category + '\n' + time + ' ')
-            unica_articles.write('\n')
-            unica_articles.write(text + '\n')
-            unica_articles.write('----------------------------------\n\n')
-
-
+            mineducatiei_articles.write(title)
+            mineducatiei_articles.write('\n')
+            mineducatiei_articles.write(category + '\n' + time + ' ')
+            mineducatiei_articles.write('\n')
+            mineducatiei_articles.write(text + '\n')
+            mineducatiei_articles.write('----------------------------------\n\n')
 
 
 # jurnal_md()
@@ -753,23 +710,29 @@ def zdg():
 # expresul()
 # nordnews()
 # unica()
+# noimd()
+# gazetadechisinau()
+# mineducatiei()
 # Create a thread for each function
 import threading
-#threading.Thread(target=jurnal_md).start()
-# threading.Thread(target=moldova1).start()
-# threading.Thread(target=realitatea).start()
-# # threading.Thread(target=cotidianul).start()
-# threading.Thread(target=vocea_basarabiei).start()
-# threading.Thread(target=zugo).start()
-# threading.Thread(target=esp).start()
-# threading.Thread(target=expresul).start()
-# threading.Thread(target=nordnews).start()
-# threading.Thread(target=unica).start()
+threading.Thread(target=jurnal_md).start()
+threading.Thread(target=moldova1).start()
+threading.Thread(target=realitatea).start()
+# threading.Thread(target=cotidianul).start()
+threading.Thread(target=vocea_basarabiei).start()
+threading.Thread(target=zugo).start()
+threading.Thread(target=esp).start()
+threading.Thread(target=expresul).start()
+threading.Thread(target=nordnews).start()
+threading.Thread(target=unica).start()
+threading.Thread(target=noimd).start()
+threading.Thread(target=gazetadechisinau).start()
+threading.Thread(target=mineducatiei).start()
 
 # Wait for all threads to finish
 #threading.Event().wait()
 
-jurnal_md()
+# jurnal_md()
 
 # Print in red ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 print('\033[91m' + '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
@@ -788,13 +751,13 @@ print('\033[91m' + '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
 # Get back to normal
 print('\033[0m')
 
-#jurnal_md_articles.close()
-# moldova1_articles.close()
-# realitatea_articles.close()
-# cotidianul_articles.close()
-# vocea_basarabiei_articles.close()
-# zugo_articles.close()
-# esp_articles.close()
-# expresul_articles.close()
-# nordnews_articles.close()
-# unica_articles.close()
+jurnal_md_articles.close()
+moldova1_articles.close()
+realitatea_articles.close()
+cotidianul_articles.close()
+vocea_basarabiei_articles.close()
+zugo_articles.close()
+esp_articles.close()
+expresul_articles.close()
+nordnews_articles.close()
+unica_articles.close()
