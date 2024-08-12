@@ -730,7 +730,7 @@ threading.Thread(target=gazetadechisinau).start()
 threading.Thread(target=mineducatiei).start()
 
 # Wait for all threads to finish
-#threading.Event().wait()
+threading.Event().wait()
 
 # jurnal_md()
 
