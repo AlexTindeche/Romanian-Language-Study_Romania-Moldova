@@ -1,2 +1,5 @@
 venv
 __pycache__
+large_array.dat
+large_array_y.dat
+news_diacritics_final.db
