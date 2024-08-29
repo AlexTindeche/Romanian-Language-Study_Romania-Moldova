@@ -3,3 +3,7 @@ __pycache__
 large_array.dat
 large_array_y.dat
 news_diacritics_final.db
+X_list.pkl
+y_list.pkl
+X_list_tokenized.pkl
+y_list_tokenized.pkl
